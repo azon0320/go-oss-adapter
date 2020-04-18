@@ -1,6 +1,10 @@
 package pkg
 
-import "io"
+import (
+	go_oss_server "github.com/dormao/go-oss-adapter/pkg/go_oss_server"
+	"github.com/dormao/go-oss-adapter/pkg/qiniu"
+	"io"
+)
 
 type OSSAdapter interface {
 	Init(token CredentialsToken, params AdapterParams) error
@@ -17,4 +21,15 @@ type OSSAdapter interface {
 
 	MakePublicURL(key string, params AdapterParams) string
 	MakePrivateURL(key string, params AdapterParams) string
+}
+
+func CreateAdapter(adaptername string) OSSAdapter {
+	switch adaptername {
+	case "qiniu":
+		return &qiniu.Adapter{}
+	case "go_oss_server":
+		return &go_oss_server.Adapter{}
+	default:
+		return nil
+	}
 }

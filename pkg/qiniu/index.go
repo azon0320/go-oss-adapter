@@ -87,8 +87,7 @@ func (adapter *Adapter) MakePrivateURL(key string, params pkg.AdapterParams) str
 	return storage.MakePrivateURL(
 		adapter.mac,
 		*adapter.Domain, key,
-		params.GetOrDefault(
-			ParamKeyPrivateURLDeadlineUnix, time.Now().Add(5*time.Minute).Unix()).(int64),
+		params.GetOrDefault(ParamKeyPrivateURLDeadlineUnix, time.Now().Add(5*time.Minute).Unix()).(int64),
 	)
 }
 
