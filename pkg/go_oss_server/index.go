@@ -50,11 +50,13 @@ func (adapter *Adapter) Bucket(buck string) error {
 func (adapter *Adapter) Name() string { return AdapterName }
 
 func (adapter *Adapter) PutObjectFromByteArray(key string, data []byte, readLen int64, params pkg.AdapterParams) (interface{}, error) {
+	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
 	reader := bytes.NewReader(data)
 	return adapter.PutObjectFromReader(key, reader, params)
 }
 
 func (adapter *Adapter) PutObjectFromReader(key string, reader io.Reader, params pkg.AdapterParams) (interface{}, error) {
+	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
 	ext := params.GetOrDefault(ParamKeyExt, "txt").(string)
 	req, err := adapter.buildForm(adapter.credentials, *adapter.bucket, key, reader, fmt.Sprintf("%s.%s", "file", ext))
 	if err != nil {
@@ -68,6 +70,7 @@ func (adapter *Adapter) PutObjectFromReader(key string, reader io.Reader, params
 }
 
 func (adapter *Adapter) PutObjectFromFilePath(key, filepath string, params pkg.AdapterParams) (interface{}, error) {
+	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
 	file, err := os.Open(filepath)
 	if err != nil {
 		return nil, err
@@ -96,10 +99,12 @@ func (adapter *Adapter) GetObjectToFile(key string, params pkg.AdapterParams) er
 }
 
 func (adapter *Adapter) MakePublicURL(key string, params pkg.AdapterParams) string {
+	if adapter.bucket == nil { return "" }
 	return fmt.Sprintf("%s/%s/%s", *adapter.EndpointURL, *adapter.bucket, strings.Trim(key, "/"))
 }
 
 func (adapter *Adapter) MakePrivateURL(key string, params pkg.AdapterParams) string {
+	if adapter.bucket == nil { return "" }
 	return fmt.Sprintf("%s/%s/%s", *adapter.EndpointURL, *adapter.bucket, strings.Trim(key, "/"))
 }
 

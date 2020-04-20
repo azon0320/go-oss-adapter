@@ -45,6 +45,7 @@ func (adapter *Adapter) Bucket(buck string) error {
 func (adapter *Adapter) Name() string { return AdapterName }
 
 func (adapter *Adapter) PutObjectFromByteArray(key string, data []byte, readLen int64, params pkg.AdapterParams) (interface{}, error) {
+	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
 	var reader = bytes.NewReader(data)
 	upToken, _, extra, ret := adapter.prepareUploadEssentials(key, params)
 	err := adapter.uploader.Put(context.Background(), ret, upToken, key, reader, readLen, extra)
@@ -52,6 +53,7 @@ func (adapter *Adapter) PutObjectFromByteArray(key string, data []byte, readLen 
 }
 
 func (adapter *Adapter) PutObjectFromReader(key string, reader io.Reader, params pkg.AdapterParams) (interface{}, error) {
+	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
 	var readLen = int64(params.GetOrDefault(ParamKeyByteLen, 0).(int))
 	if readLen <= 0 {
 		return nil, errors.New(fmt.Sprintf("specified param key (%s) not found", ParamKeyByteLen))
@@ -62,6 +64,7 @@ func (adapter *Adapter) PutObjectFromReader(key string, reader io.Reader, params
 }
 
 func (adapter *Adapter) PutObjectFromFilePath(key, filepath string, params pkg.AdapterParams) (interface{}, error) {
+	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
 	upToken, _, extra, ret := adapter.prepareUploadEssentials(key, params)
 	err := adapter.uploader.PutFile(context.Background(), ret, upToken, key, filepath, extra)
 	return ret, err
