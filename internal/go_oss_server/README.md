@@ -1,12 +1,23 @@
 # Go OSS go-oss-server适配器
 
+## go-oss-server的Credentials参数
+* `AccessKey` 访问key
+* `AccessSecret` 密钥
+* `Endpoint` 外链的BaseURL，必须指定，并且必须带`http`或者`https`
+~~~
+# 示例:
+    http://localhost
+    https://localhost:3000
+    http://foshan.myoss.net:8080
+~~~
+
 ## go-oss-server的针对性参数(pkg.AdapterParams)
 
 #### 初始化需要的参数 Init()
 ##### `[int] conf.timeout` 超时时间，单位（秒），默认3
 
 #### 上传非文件需要的参数
-##### `[string] upload.ext` 文件扩展名，建议指定，这样可以帮助浏览器识别文件类型，默认txt
+##### `[string] upload.ext` 文件扩展名，建议指定，这样可以帮助浏览器识别文件类型。如果不指定，将作为文本处理(追加后缀.txt)
 
 ## 示例用法
 ~~~

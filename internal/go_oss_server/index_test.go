@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dormao/go-oss-adapter/pkg"
+	"strings"
 	"testing"
 )
 
@@ -55,6 +56,37 @@ func TestExecutable(t *testing.T) {
 	fmt.Println(fmt.Sprintf("generate public URL: %s", ossClient.MakePublicURL(Key, pkg.AdapterParams{})))
 }
 
+func TestList(t *testing.T) {
+	var ossClient = Adapter{}
+	err := ossClient.Init(pkg.CredentialsToken{
+		AccessKey:    "root",
+		AccessSecret: "rootpw",
+		Endpoint:     "http://localhost:8022",
+	}, pkg.AdapterParams{})
+	ossClient.Bucket("mybucket")
+	list, err := ossClient.ListObjects("images", pkg.AdapterParams{})
+	if err != nil {
+		t.Errorf("error while listing objects: %s", err)
+		return
+	}
+	fmt.Println(fmt.Sprintf("result: %s", strings.Join(list, ",")))
+}
+
+func TestDelete(t *testing.T) {
+	var ossClient = Adapter{}
+	err := ossClient.Init(pkg.CredentialsToken{
+		AccessKey:    "root",
+		AccessSecret: "rootpw",
+		Endpoint:     "http://localhost:8022",
+	}, pkg.AdapterParams{})
+	ossClient.Bucket("mybucket")
+	_, err = ossClient.DeleteObject("images/readme", pkg.AdapterParams{})
+	if err != nil {
+		t.Errorf("error while listing objects: %s", err)
+		return
+	}
+}
+
 func TestBytes(t *testing.T) {
 	const (
 		Key = "dormao"
@@ -74,4 +106,16 @@ func TestBytes(t *testing.T) {
 	respStr, _ := json.Marshal(resp)
 	fmt.Println(fmt.Sprintf("BaseResponse: %s", string(respStr)))
 	fmt.Println(fmt.Sprintf("generate public URL: %s", ossClient.MakePublicURL(Key, pkg.AdapterParams{})))
+}
+
+func TestInit(t *testing.T) {
+	var ossClient = Adapter{}
+	err := ossClient.Init(pkg.CredentialsToken{
+		AccessKey:    "root",
+		AccessSecret: "rootpw",
+		Endpoint:     "http://localhost:8022",
+	}, pkg.AdapterParams{})
+	if err != nil {
+		t.Errorf("error while init adapter: %s", err)
+	}
 }

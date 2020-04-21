@@ -27,7 +27,11 @@ type Adapter struct {
 func (adapter *Adapter) Init(token pkg.CredentialsToken, params pkg.AdapterParams) error {
 	adapter.Domain = &token.Endpoint
 	adapter.mac = qbox.NewMac(token.AccessKey, token.AccessSecret)
-	var zone = GetZoneFromString(params.GetOrDefault(ParamKeyZone, ZoneHuadong).(string))
+	var zonestr = params.GetOrDefault(ParamKeyZone, ZoneHuadong).(string)
+	var zone = GetZoneFromString(zonestr)
+	if zone == nil {
+		return errors.New(fmt.Sprintf("zone (%s) not found", zonestr))
+	}
 	var useHttps = params.GetOrDefault(ParamKeyUseHTTPS, false).(bool)
 	var usecdn = params.GetOrDefault(ParamKeyUseCDNDomains, false).(bool)
 	adapter.conf = &storage.Config{
@@ -45,7 +49,9 @@ func (adapter *Adapter) Bucket(buck string) error {
 func (adapter *Adapter) Name() string { return AdapterName }
 
 func (adapter *Adapter) PutObjectFromByteArray(key string, data []byte, readLen int64, params pkg.AdapterParams) (interface{}, error) {
-	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
+	if adapter.bucket == nil {
+		return nil, errors.New(fmt.Sprintf("bucket not specified"))
+	}
 	var reader = bytes.NewReader(data)
 	upToken, _, extra, ret := adapter.prepareUploadEssentials(key, params)
 	err := adapter.uploader.Put(context.Background(), ret, upToken, key, reader, readLen, extra)
@@ -53,7 +59,9 @@ func (adapter *Adapter) PutObjectFromByteArray(key string, data []byte, readLen 
 }
 
 func (adapter *Adapter) PutObjectFromReader(key string, reader io.Reader, params pkg.AdapterParams) (interface{}, error) {
-	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
+	if adapter.bucket == nil {
+		return nil, errors.New(fmt.Sprintf("bucket not specified"))
+	}
 	var readLen = int64(params.GetOrDefault(ParamKeyByteLen, 0).(int))
 	if readLen <= 0 {
 		return nil, errors.New(fmt.Sprintf("specified param key (%s) not found", ParamKeyByteLen))
@@ -64,7 +72,9 @@ func (adapter *Adapter) PutObjectFromReader(key string, reader io.Reader, params
 }
 
 func (adapter *Adapter) PutObjectFromFilePath(key, filepath string, params pkg.AdapterParams) (interface{}, error) {
-	if adapter.bucket == nil { return nil, errors.New(fmt.Sprintf("bucket not specified")) }
+	if adapter.bucket == nil {
+		return nil, errors.New(fmt.Sprintf("bucket not specified"))
+	}
 	upToken, _, extra, ret := adapter.prepareUploadEssentials(key, params)
 	err := adapter.uploader.PutFile(context.Background(), ret, upToken, key, filepath, extra)
 	return ret, err
@@ -92,6 +102,16 @@ func (adapter *Adapter) MakePrivateURL(key string, params pkg.AdapterParams) str
 		*adapter.Domain, key,
 		params.GetOrDefault(ParamKeyPrivateURLDeadlineUnix, time.Now().Add(5*time.Minute).Unix()).(int64),
 	)
+}
+
+func (adapter *Adapter) ListObjects(keyPrefix string, params pkg.AdapterParams) ([]string, error) {
+	// TODO ListObjects by prefix
+	return []string{}, errors.New("list objects has not been implemented yet")
+}
+
+func (adapter *Adapter) DeleteObject(key string, params pkg.AdapterParams) (interface{}, error) {
+	// TODO DeleteObject
+	return []string{}, errors.New("delete objects has not been implemented yet")
 }
 
 func (adapter *Adapter) prepareUploadEssentials(key string, params pkg.AdapterParams) (upToken string, putPolicy *storage.PutPolicy, putExtra *storage.PutExtra, putRet interface{}) {

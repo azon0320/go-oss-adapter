@@ -1,4 +1,4 @@
-package go_oss_server
+package tests
 
 import (
 	"bytes"
@@ -11,6 +11,15 @@ import (
 	"testing"
 	"time"
 )
+
+func TestOptions(t *testing.T) {
+	client := http.Client{}
+	req, _ := http.NewRequest("OPTIONS", "http://localhost:8022", bytes.NewReader([]byte("hello")))
+	resp, _ := client.Do(req)
+	defer resp.Body.Close()
+	dat, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(fmt.Sprintf("resp body: %s", dat))
+}
 
 func TestRequest(t *testing.T) {
 	bodyBuffer := new(bytes.Buffer)

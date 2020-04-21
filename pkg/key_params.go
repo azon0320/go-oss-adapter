@@ -1,5 +1,6 @@
-package qiniu
+package pkg
 
+// qiniu params
 const (
 	// storage conf , used from Init
 	ParamKeyZone          = "conf.zone"       // string
@@ -22,4 +23,10 @@ const (
 
 const (
 	ParamKeyPrivateURLDeadlineUnix = "url.private.deadline"
+)
+
+// go-oss-server
+const (
+	ParamKeyTimeout = "conf.timeout" //int
+	ParamKeyExt     = "upload.ext"   // string
 )

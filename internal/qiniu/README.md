@@ -1,5 +1,10 @@
 # Go OSS 七牛适配器
 
+## 七牛云的Credentials参数
+* `AccessKey` 访问key
+* `AccessSecret` 密钥
+* `Endpoint` 七牛不会用这个，但是必须在AdapterParams中指定机房`conf.zone`
+
 ## 七牛云的针对性参数(pkg.AdapterParams)
 
 #### 初始化需要的参数 Init()
@@ -14,7 +19,7 @@
 
 #### 上传文件需要的参数
 ##### `[bool] policy.overwrite` 是否覆盖上传，默认false
-##### `[int] policy.expires` 文件有效期，默认[七牛的设定](https://developer.qiniu.com/kodo/sdk/1238/go#5)
+##### `[int] policy.expires` 上传凭证的有效期（单位：秒），默认[七牛的设定](https://developer.qiniu.com/kodo/sdk/1238/go#5)
 ##### `[interface{}] upload.putret` 上传结果返回，默认为 &storage.PutRet
 ##### `[map[string]string] upload.extra.params` 上传自定义参数，键必须以`x:`开头，默认为空map
 
