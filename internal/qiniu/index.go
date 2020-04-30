@@ -16,11 +16,18 @@ const (
 	AdapterName = "qiniu"
 )
 
+type UploadToken struct {
+	Token   string
+	Expires time.Time
+}
+
 type Adapter struct {
 	mac      *qbox.Mac
+	manager  *storage.BucketManager
 	conf     *storage.Config
 	uploader *storage.FormUploader
 	bucket   *string
+	token    *UploadToken
 	Domain   *string
 }
 
@@ -38,12 +45,17 @@ func (adapter *Adapter) Init(token pkg.CredentialsToken, params pkg.AdapterParam
 		Zone: zone, UseHTTPS: useHttps, UseCdnDomains: usecdn,
 	}
 	adapter.uploader = storage.NewFormUploader(adapter.conf)
+	adapter.manager = storage.NewBucketManager(adapter.mac, adapter.conf)
 	return nil
 }
 
 func (adapter *Adapter) Bucket(buck string) error {
 	adapter.bucket = &buck
 	return nil
+}
+
+func (adapter *Adapter) GetBucket() *string {
+	return adapter.bucket
 }
 
 func (adapter *Adapter) Name() string { return AdapterName }
@@ -105,13 +117,40 @@ func (adapter *Adapter) MakePrivateURL(key string, params pkg.AdapterParams) str
 }
 
 func (adapter *Adapter) ListObjects(keyPrefix string, params pkg.AdapterParams) ([]string, error) {
-	// TODO ListObjects by prefix
-	return []string{}, errors.New("list objects has not been implemented yet")
+	var list = make([]string, 0)
+	if adapter.bucket == nil {
+		return list, errors.New("bucket is nil")
+	}
+	var bucket = *adapter.bucket
+	var limit = params.GetOrDefault(ParamKeyListLimit, 100).(int)
+	entries, _, _, _, err := adapter.manager.ListFiles(bucket, keyPrefix, "", "", limit)
+	if err != nil {
+		return list, err
+	}
+	for _, v := range entries {
+		list = append(list, v.Key)
+	}
+	return list, nil
 }
 
 func (adapter *Adapter) DeleteObject(key string, params pkg.AdapterParams) (interface{}, error) {
-	// TODO DeleteObject
-	return []string{}, errors.New("delete objects has not been implemented yet")
+	if adapter.bucket == nil {
+		return nil, errors.New("bucket is nil")
+	}
+	var bucket = *adapter.bucket
+	return nil, adapter.manager.Delete(bucket, key)
+}
+
+func (adapter *Adapter) GetUploadToken(params pkg.AdapterParams) (tkn interface{}, err error) {
+	var pol = params.GetOrDefault(ParamKeyPolicyObject, nil)
+	if pol != nil {
+		var policy = pol.(*storage.PutPolicy)
+		if policy.Scope == "" {
+			policy.Scope = *adapter.bucket
+		}
+		tkn = policy.UploadToken(adapter.mac)
+	}
+	return
 }
 
 func (adapter *Adapter) prepareUploadEssentials(key string, params pkg.AdapterParams) (upToken string, putPolicy *storage.PutPolicy, putExtra *storage.PutExtra, putRet interface{}) {

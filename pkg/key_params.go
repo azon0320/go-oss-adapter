@@ -13,12 +13,14 @@ const (
 	// upload with overwrite: ${BUCKET_NAME}:${KEY_NAME}
 	ParamKeyPolicyOverwrite = "policy.overwrite" // bool
 	ParamKeyPolicyExpires   = "policy.expires"   // uint64 unit:second
+	ParamKeyPolicyObject    = "policy.object"
 )
 
 const (
 	ParamKeyByteLen     = "upload.bytelen"      // int
 	ParamKeyPutRet      = "upload.putret"       // struct pointer
 	ParamKeyExtraParams = "upload.extra.params" // map[string]string
+	ParamKeyListLimit   = "manager.list.limit"  // int
 )
 
 const (

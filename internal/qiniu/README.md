@@ -26,6 +26,9 @@
 #### 通过字节流（Reader）上传时的参数
 ##### `[int] upload.bytelen` !!必须指定!! 指定Reader读多少个字节
 
+## 关于生成UploadToken的参数
+##### `[*PutPolicy] policy.object` !!必须指定!! 整个PutPolicy对象指针
+
 ## 关于生成外链的参数
 生成私有外链时，要指定私有链过期时间
 ###### `[int64] url.private.deadline` 一个unix时间戳，表示过期时间

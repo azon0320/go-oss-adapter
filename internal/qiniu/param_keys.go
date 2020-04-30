@@ -14,6 +14,8 @@ const (
 	// upload with overwrite: ${BUCKET_NAME}:${KEY_NAME}
 	ParamKeyPolicyOverwrite = pkg.ParamKeyPolicyOverwrite // bool
 	ParamKeyPolicyExpires   = pkg.ParamKeyPolicyExpires   // uint64 unit:second
+	ParamKeyPolicyObject    = pkg.ParamKeyPolicyObject    // string
+	ParamKeyListLimit       = pkg.ParamKeyListLimit       // int
 )
 
 const (

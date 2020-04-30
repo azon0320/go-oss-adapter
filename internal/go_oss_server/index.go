@@ -56,6 +56,10 @@ func (adapter *Adapter) Bucket(buck string) error {
 	return nil
 }
 
+func (adapter *Adapter) GetBucket() *string {
+	return adapter.bucket
+}
+
 func (adapter *Adapter) Name() string { return AdapterName }
 
 func (adapter *Adapter) PutObjectFromByteArray(key string, data []byte, readLen int64, params pkg.AdapterParams) (interface{}, error) {
@@ -218,6 +222,11 @@ func (adapter *Adapter) DeleteObject(key string, params pkg.AdapterParams) (v in
 		return
 	}
 	v, err = adapter.onResponse(resp)
+	return
+}
+
+func (adapter *Adapter) GetUploadToken(params pkg.AdapterParams) (tkn interface{}, err error) {
+	tkn = ""
 	return
 }
 

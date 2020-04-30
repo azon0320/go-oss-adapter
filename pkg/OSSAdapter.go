@@ -7,6 +7,7 @@ import (
 type OSSAdapter interface {
 	Init(token CredentialsToken, params AdapterParams) error
 	Bucket(buck string) error
+	GetBucket() *string
 	Name() string
 
 	PutObjectFromByteArray(key string, data []byte, readLen int64, params AdapterParams) (interface{}, error)
@@ -22,4 +23,6 @@ type OSSAdapter interface {
 
 	ListObjects(keyPrefix string, params AdapterParams) ([]string, error)
 	DeleteObject(key string, params AdapterParams) (interface{}, error)
+
+	GetUploadToken(params AdapterParams) (interface{}, error)
 }
