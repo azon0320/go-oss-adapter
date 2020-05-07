@@ -1,9 +1,9 @@
 package public
 
 import (
-	"github.com/dormao/go-oss-adapter/internal/go_oss_server"
-	"github.com/dormao/go-oss-adapter/internal/qiniu"
-	"github.com/dormao/go-oss-adapter/pkg"
+	"gitlab.linkjob.top/luoyongjin/go-oss-adapter/internal/go_oss_server"
+	"gitlab.linkjob.top/luoyongjin/go-oss-adapter/internal/qiniu"
+	"gitlab.linkjob.top/luoyongjin/go-oss-adapter/pkg"
 )
 
 func CreateAdapter(adaptername string) pkg.OSSAdapter {

@@ -1,4 +1,4 @@
-module github.com/dormao/go-oss-adapter
+module gitlab.linkjob.top/luoyongjin/go-oss-adapter
 
 go 1.13
 
