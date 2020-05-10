@@ -5,9 +5,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/azon0320/go-oss-adapter/pkg"
 	"github.com/qiniu/api.v7/v7/auth/qbox"
 	"github.com/qiniu/api.v7/v7/storage"
-	"gitlab.linkjob.top/luoyongjin/go-oss-adapter/pkg"
 	"io"
 	"time"
 )

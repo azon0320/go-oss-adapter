@@ -1,6 +1,6 @@
 package go_oss_server
 
-import "gitlab.linkjob.top/luoyongjin/go-oss-adapter/pkg"
+import "github.com/azon0320/go-oss-adapter/pkg"
 
 const (
 	ParamKeyTimeout = pkg.ParamKeyTimeout //int

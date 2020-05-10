@@ -1,6 +1,6 @@
 package qiniu
 
-import "gitlab.linkjob.top/luoyongjin/go-oss-adapter/pkg"
+import "github.com/azon0320/go-oss-adapter/pkg"
 
 const (
 	// storage conf , used from Init

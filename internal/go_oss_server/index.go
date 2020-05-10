@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gitlab.linkjob.top/luoyongjin/go-oss-adapter/pkg"
+	"github.com/azon0320/go-oss-adapter/pkg"
 	"io"
 	"io/ioutil"
 	"mime/multipart"

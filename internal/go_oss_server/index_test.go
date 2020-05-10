@@ -3,7 +3,7 @@ package go_oss_server
 import (
 	"encoding/json"
 	"fmt"
-	"gitlab.linkjob.top/luoyongjin/go-oss-adapter/pkg"
+	"github.com/azon0320/go-oss-adapter/pkg"
 	"strings"
 	"testing"
 )
